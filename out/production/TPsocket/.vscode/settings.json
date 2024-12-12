@@ -1,0 +1,7 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\MehdyZait\\Downloads\\0e0lVRy4j95iBEz1-Source%20ListeAuth\\h2-1.2.147.jar\\h2-1.2.147.jar",
+        "c:\\Users\\MehdyZait\\Downloads\\JsonLogger (1)\\javax.json-1.0.jar\\javax.json-1.0.jar"
+    ]
+}
