@@ -2,6 +2,7 @@ package as;
 
 import java.io.*;
 import java.net.*;
+import logs.JsonLogger;
 
 public class AuthServer {
 
@@ -17,7 +18,7 @@ public class AuthServer {
             System.out.println("AuthServer en attente de connexions sur le port " + PORT);
 
             while (true) {
-                Socket clientSocket = serverSocket.accept(); // Handle each client in a new thread
+                Socket clientSocket = serverSocket.accept(); 
                 new Thread(() -> handleClient(clientSocket)).start();
             }
         } catch (IOException e) {
@@ -30,11 +31,15 @@ public class AuthServer {
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
         ) {
+            String clientHost = clientSocket.getInetAddress().getHostAddress();
+            int clientPort = clientSocket.getPort();
+            String protocol = "TCP"; 
+
             String request;
-            while ((request = in.readLine()) != null) { // Handle multiple requests
+            while ((request = in.readLine()) != null) { 
                 System.out.println("Requête reçue: " + request);
-                String response = handleRequest(request);
-                out.println(response); // Send the response
+                String response = handleRequest(request, clientHost, clientPort, protocol);
+                out.println(response);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,47 +52,70 @@ public class AuthServer {
         }
     }
 
-    private String handleRequest(String request) {
-        if (request.startsWith("CHK ")) {
-            String[] parts = request.split(" ");
-            if (parts.length == 3) {
-                String login = parts[1];
-                String password = parts[2];
-                if (listeAuth.tester(login, password)) {
-                    return "GOOD";
-                } else {
-                    return "BAD";
+    private String handleRequest(String request, String clientHost, int clientPort, String protocol) {
+        String operationType = "";
+        String login = "";
+        String result = "ERROR";
+        String response = "ERROR invalid_request";
+
+        try {
+            if (request.startsWith("CHK ")) {
+                operationType = "CHK";
+                String[] parts = request.split(" ");
+                if (parts.length == 3) {
+                    login = parts[1];
+                    String password = parts[2];
+                    if (listeAuth.tester(login, password)) {
+                        result = "GOOD";
+                        response = "GOOD";
+                    } else {
+                        result = "BAD";
+                        response = "BAD";
+                    }
+                }
+            } else if (request.startsWith("ADD ")) {
+                operationType = "ADD";
+                String[] parts = request.split(" ");
+                if (parts.length == 3) {
+                    login = parts[1];
+                    String password = parts[2];
+                    if (listeAuth.creer(login, password)) {
+                        result = "DONE";
+                        response = "DONE";
+                    }
+                }
+            } else if (request.startsWith("MOD ")) {
+                operationType = "MOD";
+                String[] parts = request.split(" ");
+                if (parts.length == 3) {
+                    login = parts[1];
+                    String newPassword = parts[2];
+                    if (listeAuth.mettreAJour(login, newPassword)) {
+                        result = "DONE";
+                        response = "DONE";
+                    }
+                }
+            } else if (request.startsWith("DEL ")) {
+                operationType = "DEL";
+                String[] parts = request.split(" ");
+                if (parts.length == 3) {
+                    login = parts[1];
+                    String password = parts[2];
+                    if (listeAuth.supprimer(login, password)) {
+                        result = "DONE";
+                        response = "DONE";
+                    }
                 }
             }
-        } else if (request.startsWith("ADD ")) {
-            String[] parts = request.split(" ");
-            if (parts.length == 3) {
-                String login = parts[1];
-                String password = parts[2];
-                if (listeAuth.ajouter(login, password)) {
-                    return "DONE";
-                }
-            }
-        } else if (request.startsWith("MOD ")) {
-            String[] parts = request.split(" ");
-            if (parts.length == 3) {
-                String login = parts[1];
-                String newPassword = parts[2];
-                if (listeAuth.mettreAJour(login, newPassword)) {
-                    return "DONE";
-                }
-            }
-        } else if (request.startsWith("DEL ")) {
-            String[] parts = request.split(" ");
-            if (parts.length == 3) {
-                String login = parts[1];
-                String password = parts[2];
-                if (listeAuth.supprimer(login, password)) {
-                    return "DONE";
-                }
-            }
+
+            // Journalisation de la requête
+            JsonLogger.log(clientHost, clientPort, protocol, operationType, login, result);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return "ERROR invalid_request";
+
+        return response;
     }
 
     public static void main(String[] args) {

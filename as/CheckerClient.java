@@ -29,11 +29,11 @@ public class CheckerClient {
                 System.out.println("Entrez votre mot de passe : ");
                 String password = scanner.nextLine();
 
-                // Formatage de la requête
+                // Formatage
                 String request = "CHK " + login + " " + password;
                 out.println(request);
 
-                // Lecture de la réponse du serveur
+                // Lecture 
                 String response = in.readLine();
                 if (response != null) {
                     System.out.println("Réponse du serveur : " + response);

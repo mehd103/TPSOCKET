@@ -27,7 +27,7 @@ public class ManagerClient {
                 System.out.println("+-------------------------------+");
 
                 int choix = scanner.nextInt();
-                scanner.nextLine(); // Ignore the newline
+                scanner.nextLine(); 
 
                 String login, password, newPassword;
                 String request;
@@ -74,10 +74,10 @@ public class ManagerClient {
                         continue;
                 }
 
-                // Send the request to the server
+                
                 out.println(request);
 
-                // Wait for the server's response
+                
                 String response = in.readLine();
                 if (response != null) {
                     System.out.println("Réponse du serveur : " + response);

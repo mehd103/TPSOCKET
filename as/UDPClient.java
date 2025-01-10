@@ -21,7 +21,7 @@ public class UDPClient {
                 System.out.println("+-------------------------------+");
 
                 int choix = scanner.nextInt();
-                scanner.nextLine(); // Ignorer la ligne vide
+                scanner.nextLine();
 
                 if (choix == 0) {
                     System.out.println("Déconnexion...");
@@ -34,15 +34,15 @@ public class UDPClient {
                     System.out.println("Tapez le mot de passe :");
                     String password = scanner.nextLine();
 
-                    // Construire la requête
+
                     String request = "CHK " + login + " " + password;
 
-                    // Envoyer la requête au serveur
+          
                     byte[] requestBytes = request.getBytes();
                     DatagramPacket requestPacket = new DatagramPacket(requestBytes, requestBytes.length, serverAddress, SERVER_PORT);
                     socket.send(requestPacket);
 
-                    // Recevoir la réponse du serveur
+             
                     byte[] responseBuffer = new byte[1024];
                     DatagramPacket responsePacket = new DatagramPacket(responseBuffer, responseBuffer.length);
                     socket.receive(responsePacket);

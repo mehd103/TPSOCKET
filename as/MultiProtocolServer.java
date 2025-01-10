@@ -90,7 +90,7 @@ public class MultiProtocolServer {
 
     private String handleRequest(String request) {
         try {
-            // Parser la requête
+            
             String[] parts = request.split(" ");
             if (parts.length != 3 || !"CHK".equals(parts[0])) {
                 return "ERROR invalid_request";
@@ -99,7 +99,9 @@ public class MultiProtocolServer {
             String login = parts[1];
             String password = parts[2];
 
-            // Vérifier les informations
+            
+
+            
             if (listeAuth.tester(login, password)) {
                 return "GOOD";
             } else {

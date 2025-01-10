@@ -1,49 +1,57 @@
 package logs;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.io.*;
+import java.net.*;
 
 public class LogServer {
 
     private static final int PORT = 3244;
 
-    public static void main(String[] args) {
+    public void start() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             System.out.println("LogServer en attente de connexions sur le port " + PORT);
 
             while (true) {
-                // Accepter les connexions des clients
                 Socket clientSocket = serverSocket.accept();
-                new Thread(() -> handleClient(clientSocket)).start();
+                new Thread(() -> handleClient(clientSocket)).start(); 
             }
-        } catch (Exception e) {
-            System.err.println("Erreur du serveur de log : " + e.getMessage());
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void handleClient(Socket clientSocket) {
+    private void handleClient(Socket clientSocket) {
         try (
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
+            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))
         ) {
             String logMessage;
-            while ((logMessage = in.readLine()) != null) {
-                System.out.println("Message de journalisation reçu : " + logMessage);
-                // Répondre au client pour confirmer la réception
-                out.println("Log reçu avec succès.");
+            while ((logMessage = in.readLine()) != null) { // Lire les messages ligne par ligne
+                System.out.println("Log reçu : " + logMessage); // Afficher le log reçu
+                saveLogToFile(logMessage); // Sauvegarder le log dans un fichier
             }
-        } catch (Exception e) {
-            System.err.println("Erreur lors du traitement du client : " + e.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             try {
                 clientSocket.close();
-            } catch (Exception e) {
-                System.err.println("Erreur lors de la fermeture de la connexion : " + e.getMessage());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
+    }
+
+    private void saveLogToFile(String logMessage) {
+        try (FileWriter fileWriter = new FileWriter("logs.txt", true);
+             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
+            bufferedWriter.write(logMessage);
+            bufferedWriter.newLine();
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la sauvegarde du log : " + e.getMessage());
+        }
+    }
+
+    public static void main(String[] args) {
+        LogServer logServer = new LogServer();
+        logServer.start();
     }
 }

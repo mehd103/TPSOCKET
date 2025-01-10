@@ -1,5 +1,6 @@
 package logs;
 
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -80,28 +81,23 @@ public class JsonLogger {
 	 * @param result résultat de l'opération
 	 */
 	public static void log(String host, int port, String proto, String type, String login, String result) {
-		JsonLogger logger = getLogger();
-		// à compléter
+    JsonLogger logger = getLogger();
+    JsonObject log = logger.reqToJson(host, port, proto, type, login, result);
 
-		JsonObject log = logger.reqToJson(host, port, proto, type, login, result);
+    System.out.println("Tentative de connexion au LogServer " + LOG_SERVER_HOST + ":" + LOG_SERVER_PORT);
+    System.out.println("Message de log : " + log.toString());
 
+    try (Socket logSocket = new Socket(LOG_SERVER_HOST, LOG_SERVER_PORT);
+         PrintWriter out = new PrintWriter(new OutputStreamWriter(logSocket.getOutputStream()), true)) {
 
-        
-
-		System.out.println("Log: " + log.toString());	
-
-
-		try (Socket socket = new Socket(host, port);
-         PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true)) {
-
-        // Send the JSON object as a string
         out.println(log.toString());
+        System.out.println("Message envoyé au LogServer : " + log);
 
-    	} catch (Exception e) {
-        // Handle exceptions when logging fails
-        System.err.println("Failed to send log to server: " + e.getMessage());
-    	}
-	}
+    } catch (IOException e) {
+        System.err.println("Erreur lors de l'envoi du log au serveur : " + e.getMessage());
+    }
+}
+
 
 	public static void main(String [] args){
 		JsonLogger jsonLogger = new JsonLogger();

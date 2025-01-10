@@ -8,7 +8,7 @@ class UDPServer {
     private ListeAuth listeAuth;
 
     public UDPServer() {
-        // Initialiser la base d'authentification (par exemple avec une BD H2)
+       
         listeAuth = new ListeAuth("authentif");
     }
 
