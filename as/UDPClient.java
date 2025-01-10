@@ -3,7 +3,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.Scanner;
-
+//udp client version 1.a
 public class UDPClient {
     private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT = 28414;

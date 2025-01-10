@@ -6,3 +6,5 @@
 {"host":"127.0.0.1","port":57285,"proto":"TCP","type":"CHK","login":"test","result":"GOOD","date":"Thu Dec 12 15:37:55 CET 2024"}
 {"host":"127.0.0.1","port":57285,"proto":"TCP","type":"ADD","login":"bonjour","result":"ERROR","date":"Thu Dec 12 15:38:06 CET 2024"}
 {"host":"127.0.0.1","port":57285,"proto":"TCP","type":"CHK","login":"123","result":"BAD","date":"Thu Dec 12 15:38:21 CET 2024"}
+{"host":"127.0.0.1","port":51320,"proto":"UDP","type":"CHK","login":"login","result":"GOOD","date":"Fri Jan 10 17:33:09 CET 2025"}
+{"host":"127.0.0.1","port":58031,"proto":"TCP","type":"CHK","login":"login","result":"GOOD","date":"Fri Jan 10 17:33:30 CET 2025"}

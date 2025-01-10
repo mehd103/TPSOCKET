@@ -6,7 +6,9 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
+//check client version 1.b
 public class CheckerClient {
+    //host et port
     private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT = 28414;
 
@@ -19,21 +21,21 @@ public class CheckerClient {
             System.out.println("Connexion au serveur AS sur " + SERVER_HOST + ":" + SERVER_PORT);
 
             while (true) {
-                System.out.println("\nEntrez votre login (ou 'exit' pour quitter) : ");
+                System.out.println("\nTester login (ou 'exit' pour quitter) : ");
                 String login = scanner.nextLine();
                 if (login.equalsIgnoreCase("exit")) {
-                    System.out.println("Déconnexion...");
+                    System.out.println("Exit...");
                     break;
                 }
 
-                System.out.println("Entrez votre mot de passe : ");
+                System.out.println("Entrez mot de passe : ");
                 String password = scanner.nextLine();
 
-                // Formatage
+                // Creation requete type check chk
                 String request = "CHK " + login + " " + password;
                 out.println(request);
 
-                // Lecture 
+                // Lecture rep
                 String response = in.readLine();
                 if (response != null) {
                     System.out.println("Réponse du serveur : " + response);

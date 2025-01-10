@@ -8,8 +8,13 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+// AS version 1.0
+
 public class MultiProtocolServer {
+    //adaptation de 2 protocols
+    //tcp
     private static final int TCP_PORT = 28414;
+    //udp
     private static final int UDP_PORT = 28414;
     private ListeAuth listeAuth;
 
@@ -18,8 +23,9 @@ public class MultiProtocolServer {
         listeAuth = new ListeAuth("authentif");
     }
 
+
     public void start() {
-        // Lancer les threads pour TCP et UDP
+        // Lancer les sockets d'ecoute TCP et UDP
         new Thread(this::startTCPServer).start();
         new Thread(this::startUDPServer).start();
     }
@@ -36,6 +42,8 @@ public class MultiProtocolServer {
         }
     }
 
+
+    //protocole tcp
     private void handleTCPClient(Socket clientSocket) {
         try (
             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -58,7 +66,7 @@ public class MultiProtocolServer {
         }
     }
     
-
+    //protocol udp socket en datagramme
     private void startUDPServer() {
         try (DatagramSocket socket = new DatagramSocket(UDP_PORT)) {
             System.out.println("Serveur UDP en écoute sur le port " + UDP_PORT);
@@ -88,6 +96,8 @@ public class MultiProtocolServer {
         }
     }
 
+
+    //Requetes chk checker
     private String handleRequest(String request) {
         try {
             

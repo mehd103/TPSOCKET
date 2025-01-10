@@ -5,11 +5,12 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public class ManagerClient {
-
+    //serv et port
     private static final String SERVER_HOST = "localhost";
     private static final int SERVER_PORT = 28414;
 
     public void start() {
+        //lancement = meme procédé que client checker
         try (Socket socket = new Socket(SERVER_HOST, SERVER_PORT);
              BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
              PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()), true);
@@ -17,6 +18,7 @@ public class ManagerClient {
 
             System.out.println("Connexion au serveur AS sur " + SERVER_HOST + ":" + SERVER_PORT);
 
+            //ajout des fonctionalités Manager
             while (true) {
                 System.out.println("\n+-------------------------------+");
                 System.out.println("| 1 - Vérifier une paire (CHK)  |");
@@ -33,7 +35,7 @@ public class ManagerClient {
                 String request;
 
                 switch (choix) {
-                    case 1: // CHK
+                    case 1: // CHK check
                         System.out.println("Tapez le login :");
                         login = scanner.nextLine();
                         System.out.println("Tapez le mot de passe :");
@@ -41,7 +43,7 @@ public class ManagerClient {
                         request = "CHK " + login + " " + password;
                         break;
 
-                    case 2: // ADD
+                    case 2: // ADD creer
                         System.out.println("Tapez le login :");
                         login = scanner.nextLine();
                         System.out.println("Tapez le mot de passe :");
@@ -49,7 +51,7 @@ public class ManagerClient {
                         request = "ADD " + login + " " + password;
                         break;
 
-                        case 3: // MOD
+                        case 3: // MOD modficiation
                         System.out.println("Tapez le login :");
                         login = scanner.nextLine();
                         System.out.println("Tapez le nouveau mot de passe :");
@@ -57,7 +59,7 @@ public class ManagerClient {
                         request = "MOD " + login + " " + newPassword;
                         break;
 
-                    case 4: // DEL
+                    case 4: // DEL suppr
                         System.out.println("Tapez le login :");
                         login = scanner.nextLine();
                         System.out.println("Tapez le mot de passe :");
